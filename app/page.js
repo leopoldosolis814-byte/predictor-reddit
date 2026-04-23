@@ -21,92 +21,53 @@ export default function Home() {
       const data = await res.json()
       setResult(data)
     } catch (error) {
-      alert("Error al conectar con la IA")
+      console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center p-6">
+    <main className="relative min-h-screen flex items-center justify-center p-6 text-white font-sans">
       <Background />
-
-      <div className="w-full max-w-2xl bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-8 md:p-14 shadow-2xl transition-all">
+      <div className="w-full max-w-2xl bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+        <h1 className="text-4xl font-black text-center mb-8 tracking-tighter">
+          PREDICTOR <span className="text-orange-500">STARTUP</span>
+        </h1>
         
-        {/* Cabecera */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight mb-2">
-            Predictor <span className="text-orange-500">Startup</span>
-          </h1>
-          <p className="text-white/50 text-sm tracking-widest uppercase">Validación con Llama 3 & Groq</p>
-        </div>
-
-        {/* Pantalla de Entrada */}
         {!result && !loading && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <textarea
               value={idea}
               onChange={(e) => setIdea(e.target.value)}
-              placeholder="Ej: Una plataforma para alquilar herramientas entre vecinos..."
-              className="w-full p-6 rounded-3xl bg-black/20 border border-white/10 text-white placeholder:text-white/20 outline-none focus:ring-2 focus:ring-orange-500/40 transition-all h-44 resize-none text-lg"
+              placeholder="Describe tu idea..."
+              className="w-full p-6 rounded-2xl bg-white/5 border border-white/10 outline-none focus:ring-2 focus:ring-orange-500 h-40 resize-none text-lg"
             />
             <button 
               onClick={handleAnalizar}
-              disabled={!idea}
-              className="w-full py-5 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-2xl transition-all shadow-lg shadow-orange-900/20 active:scale-95 disabled:opacity-30"
+              className="w-full py-4 bg-orange-600 hover:bg-orange-500 font-bold rounded-xl transition-all"
             >
-              ANALIZAR IDEA
+              VALIDAR AHORA
             </button>
           </div>
         )}
 
-        {/* Pantalla de Carga */}
-        {loading && (
-          <div className="text-center py-20 space-y-4">
-            <div className="w-16 h-16 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mx-auto" />
-            <p className="text-orange-500 font-bold animate-pulse tracking-widest">PROCESANDO CON GROQ...</p>
-          </div>
-        )}
+        {loading && <div className="text-center py-10 animate-pulse text-orange-500 font-bold">ANALIZANDO CON IA...</div>}
 
-        {/* Pantalla de Resultados Profesionales */}
         {result && (
-          <div className="space-y-8 animate-in fade-in zoom-in duration-500">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">{result.titulo}</h2>
-              <div className="bg-orange-500 text-black font-black px-4 py-1 rounded-full text-xl">
-                {result.score}%
-              </div>
+          <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl">
+              <h2 className="text-xl font-bold">{result.titulo}</h2>
+              <span className="text-2xl font-black text-orange-500">{result.score}%</span>
             </div>
-
-            {/* Barra de Progreso */}
-            <div className="w-full bg-white/10 h-3 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-orange-500 transition-all duration-1000"
-                style={{ width: `${result.score}%` }}
-              />
+            <p className="text-white/70 leading-relaxed">{result.analisis}</p>
+            <div className="p-4 bg-orange-500/20 border border-orange-500/30 rounded-xl">
+              <p className="text-orange-200 italic">"Pivote: {result.pivote}"</p>
             </div>
-
-            <div className="grid gap-6 text-left">
-              <div className="bg-white/5 p-6 rounded-3xl border border-white/5">
-                <h3 className="text-orange-500 font-bold text-xs uppercase mb-2">Análisis de Mercado</h3>
-                <p className="text-white/80 leading-relaxed">{result.analisis}</p>
-              </div>
-
-              <div className="bg-orange-500/10 p-6 rounded-3xl border border-orange-500/20">
-                <h3 className="text-orange-400 font-bold text-xs uppercase mb-2">Pivote Sugerido</h3>
-                <p className="text-orange-100 font-medium italic">"{result.pivote}"</p>
-              </div>
-            </div>
-
-            <button 
-              onClick={() => setResult(null)}
-              className="w-full py-4 border border-white/10 text-white/50 hover:text-white rounded-2xl transition-all text-sm font-bold"
-            >
-              NUEVO ANÁLISIS
-            </button>
+            <button onClick={() => setResult(null)} className="w-full text-sm text-white/40 hover:text-white uppercase font-bold tracking-widest">Reiniciar</button>
           </div>
         )}
       </div>
     </main>
   )
-    }
+          }
